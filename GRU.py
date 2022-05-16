@@ -32,8 +32,6 @@ class GRU(tf.keras.layers.Layer):
         self.br = tf.Variable(initial_value=br_init(shape = (self.units,), dtype="float32"), trainable = True)    
         self.b = tf.Variable(initial_value=b_init(shape=(self.units,), dtype="float32"), trainable = True)
 
-        Wo_init = tf.random_normal_initializer()
-        self.Wo = tf.Variable(initial_value=Wo_init(shape=(self.units, self.units), dtype="float32"), trainable= True)
 
     def call(self, inputs, states): 
         prev_out = states[0]
@@ -41,12 +39,13 @@ class GRU(tf.keras.layers.Layer):
         rt = tf.sigmoid((tf.matmul(inputs, self.Wr) + tf.matmul(prev_out, self.Ur) + self.br))
         hHat = tf.tanh((tf.matmul(inputs, self.W) + tf.math.multiply(rt, prev_out) + self.b))
         new_state = tf.math.multiply(zt, hHat) + tf.math.multiply((1- zt), prev_out)
-        output = tf.matmul(new_state, self.Wo)
+        output = new_state
+        # output = tf.matmul(new_state, self.Wo) + self.bo
         return output, [new_state]
 
 
 if __name__ == "__main__":
-    gru = tf.keras.layers.RNN(GRU(4),
+    gru = tf.keras.layers.RNN(GRU(5),
                             return_sequences = True,
                             return_state = True)
 
@@ -54,18 +53,18 @@ if __name__ == "__main__":
     Out = gru(Inp)
     model = tf.keras.models.Model(Inp, Out)
     
-    lstm = tf.keras.layers.GRU(2,
-                               return_sequences = True,
-                               return_state = True)
+    # lstm = tf.keras.layers.RNN(tf.keras.layers.GRUCell(4),
+    #                            return_sequences = True,
+    #                            return_state = True)
     
-    Out_2 = lstm(Inp)
-    model_2 = tf.keras.models.Model(Inp, Out_2)
+    # Out_2 = lstm(Inp)
+    # model_2 = tf.keras.models.Model(Inp, Out_2)
 
-    weight_1 = lstm.weights
-    weight_2 = lstm.get_weights()
-
-    for i in range(3):
-        print("Weight_1.shape: ", weight_1[i].shape, "\t", "Weight_2.shape: ",weight_2[i].shape )
-        
+    # # print(model.summary())
+    # # print(model_2.summary())
+    weight_1 = gru.Variable
+    # weight_2 = lstm.get_weights()
+    for i in weight_1:
+        print(i.shape)
 
     
