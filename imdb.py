@@ -2,8 +2,7 @@ import GRU, dense
 import tensorflow as tf
 
 
-(x_train, y_train), _ = tf.keras.datasets.imdb.load_data(maxlen = 100, 
-                                                        num_words = 1000)
+(x_train, y_train), _ = tf.keras.datasets.imdb.load_data(maxlen = 100,  num_words = 1000)
 x_train = tf.keras.preprocessing.sequence.pad_sequences(x_train, padding = "post")
 y = tf.expand_dims(y_train, axis = 1)
 
